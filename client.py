@@ -1,5 +1,5 @@
 import socket
-SERVER_IP = "10.202.41.238"   
+SERVER_IP = "10.7.183.22"   
 PORT = 5000
 def main():
     name = input("Enter name: ").strip()
@@ -25,4 +25,4 @@ def main():
     finally:
         client.close()
 if __name__ == "__main__":
-    main()
+    main()  
