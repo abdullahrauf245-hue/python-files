@@ -10,7 +10,7 @@ FILES_FOLDER = "server_files"
 CHUNK_SIZE = 1024           # payload bytes per datagram
 PACE_EVERY = 50             # short pause after this many packets
 
-TEST_DUP_REORDER = False    # True = duplicate one chunk, swap two chunks
+TEST_DUP_REORDER = True    # True = duplicate one chunk, swap two chunks
 TEST_DROP_CHUNK = None      # e.g. 7 = never send chunk 7 (simulates packet loss)
 
 
