@@ -1,20 +1,18 @@
 import socket
+import time
  
 HOST = "127.0.0.1"
-PORT = 5001
+PORT = 5004
  
-server_socket = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server_socket.bind((HOST, PORT))
-print("UDP Server is waiting for messages...")
+server_socket.listen(1)
+print("Boundary demo server waiting...")
  
-while True:
-    data, addr = server_socket.recvfrom(1024)
-    message = data.decode()
-    print("Client:", message)
-    if message.lower() == "exit":
-        break
-    response = "Server received: " + message
-    server_socket.sendto(response.encode(), addr)
- 
+conn, addr = server_socket.accept()
+conn.sendall(b"AAAA")        # three separate send() calls
+conn.sendall(b"BBBB")
+conn.sendall(b"CCCC")
+time.sleep(1)                # keep the connection open for a moment
+conn.close()
 server_socket.close()
-print("UDP Server closed.")
