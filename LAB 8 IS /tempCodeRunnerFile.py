@@ -1,29 +1,22 @@
-# TASK 2: RSA Encryption (uses PUBLIC key from Task 1)
+# TASK 3: RSA Decryption (uses PRIVATE key from Task 1)
 import json
-import base64
 
-def encrypt(message, public_key):
-    e, n = public_key
-    m = int.from_bytes(message.encode("utf-8"), "big")   # string -> integer
-    if m >= n:
-        raise ValueError("Message too long for this key size")
-    c = pow(m, e, n)                                     # C = m^e mod n
-    c_bytes = c.to_bytes((n.bit_length() + 7) // 8, "big")
-    return c_bytes.hex(), base64.b64encode(c_bytes).decode()
+def decrypt(c, private_key):
+    d, n = private_key
+    m = pow(c, d, n)                                     # m = C^d mod n
+    return m.to_bytes((m.bit_length() + 7) // 8, "big").decode("utf-8")
 
 if __name__ == "__main__":
-    print("=== TASK 2: RSA Encryption ===")
+    print("=== TASK 3: RSA Decryption ===")
     with open("keys.json") as f:
         k = json.load(f)
-    public_key = (k["e"], k["n"])
+    private_key = (k["d"], k["n"])
 
-    message = input("Enter plaintext message: ")
-    c_hex, c_b64 = encrypt(message, public_key)
+    with open("cipher.json") as f:
+        data = json.load(f)
+    c = int.from_bytes(bytes.fromhex(data["cipher_hex"]), "big")
 
-    print("Ciphertext (hex)   :", c_hex)
-    print("Ciphertext (base64):", c_b64)
-
-    # Saved so Task 3 can decrypt it and verify against the original
-    with open("cipher.json", "w") as f:
-        json.dump({"cipher_hex": c_hex, "original": message}, f)
-    print("Ciphertext saved to cipher.json")
+    decrypted = decrypt(c, private_key)
+    print("Decrypted message :", decrypted)
+    print("Original message  :", data["original"])
+    print("Match?            :", decrypted == data["original"])
